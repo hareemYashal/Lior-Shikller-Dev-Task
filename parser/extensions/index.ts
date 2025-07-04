@@ -1,0 +1,11 @@
+export { HeadingExtension } from './HeadingExtension';
+export { BoldExtension } from './BoldExtension';
+export { ItalicExtension } from './ItalicExtension';
+export { CodeExtension } from './CodeExtension';
+export { LinkExtension } from './LinkExtension';
+export { ListExtension } from './ListExtension';
+export { CodeBlockExtension } from './CodeBlockExtension';
+export { BlockquoteExtension } from './BlockquoteExtension';
+export { StrikeExtension } from './StrikeExtension';
+export { TableExtension } from './TableExtension';
+export { TaskListExtension } from './TaskListExtension'; 
