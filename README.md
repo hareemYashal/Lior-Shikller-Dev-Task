@@ -121,17 +121,6 @@ export const MyExtension: MarkdownExtension = {
 };
 ```
 
-## Deployment
-
-This application can be deployed to Vercel, Netlify, or any other static site hosting service.
-
-### Deploy on Vercel
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fyourusername%2Fmarkdown-to-tiptap)
-
-### Deploy on Netlify
-
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/yourusername/markdown-to-tiptap)
 
 ## License
 
