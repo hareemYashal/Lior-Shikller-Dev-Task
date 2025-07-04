@@ -19,7 +19,7 @@ A modular, plugin-based Markdown-to-Tiptap converter built with Next.js, TypeScr
   - Blockquotes (> quote)
   - Strikethrough (~~text~~)
 - Live preview of rendered content in Tiptap
-- Detailed JSON output for debugging
+
 
 ## Architecture
 
