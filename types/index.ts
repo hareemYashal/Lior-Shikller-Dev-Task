@@ -38,11 +38,20 @@ export type MarkdownTaskListToken = {
   attrGet?: (name: string) => string | null;
 };
 
+export type ToolbarButtonProps = {
+  onClick: () => void;
+  active?: boolean;
+  disabled?: boolean;
+  children: React.ReactNode;
+  title?: string;
+};
+
 export type ParserErrorCode = 
   | 'INVALID_MARKDOWN' 
   | 'EXTENSION_ERROR' 
   | 'VALIDATION_ERROR' 
   | 'UNKNOWN_TOKEN' 
+  | 'TIPTAP_TO_MARKDOWN_ERROR' 
   | 'CONVERSION_ERROR';
 
 export type ParserError = {

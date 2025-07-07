@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect } from "react";
 import { EditorContent, useEditor } from "@tiptap/react";
+import { TiptapNode } from "@/types";
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import Table from "@tiptap/extension-table";
@@ -10,13 +11,19 @@ import TableHeader from "@tiptap/extension-table-header";
 import TaskList from "@tiptap/extension-task-list";
 import TaskItem from "@tiptap/extension-task-item";
 import Strike from "@tiptap/extension-strike";
-import { TiptapNode } from "@/types";
+import ToolbarButtonLists from "./ToolbarButtonLists";
 
 interface TiptapEditorProps {
   content: TiptapNode;
+  editable?: boolean;
+  onChange?: (content: TiptapNode) => void;
 }
 
-export const TiptapEditor: React.FC<TiptapEditorProps> = ({ content }) => {
+export const TiptapEditor: React.FC<TiptapEditorProps> = ({
+  content,
+  editable = false,
+  onChange,
+}) => {
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -42,21 +49,75 @@ export const TiptapEditor: React.FC<TiptapEditorProps> = ({ content }) => {
       Strike,
     ],
     content,
-    editable: false,
+    editable,
+    onUpdate: ({ editor }) => {
+      if (onChange) {
+        const json = editor.getJSON() as TiptapNode;
+        onChange(json);
+      }
+    },
   });
 
   useEffect(() => {
     if (editor && content) {
-      editor.commands.setContent(content);
+      const currentContent = editor.getJSON();
+      if (JSON.stringify(currentContent) !== JSON.stringify(content)) {
+        editor.commands.setContent(content);
+      }
     }
   }, [content, editor]);
 
+  useEffect(() => {
+    if (editor) {
+      editor.setEditable(editable);
+    }
+  }, [editable, editor]);
+
+  const setLink = () => {
+    if (!editor) return;
+    const previousUrl = editor.getAttributes("link").href;
+    const url = window.prompt("URL", previousUrl);
+
+    if (url === null) {
+      return;
+    }
+    if (url === "") {
+      editor.chain().focus().extendMarkRange("link").unsetLink().run();
+      return;
+    }
+
+    editor.chain().focus().extendMarkRange("link").setLink({ href: url }).run();
+  };
+
+  const insertTable = () => {
+    if (!editor) return;
+    editor
+      .chain()
+      .focus()
+      .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
+      .run();
+  };
+
+  if (!editor) {
+    return null;
+  }
+
   return (
-    <div className="tiptap">
+    <div>
+      {/* -----Toolbar----- */}
+      <ToolbarButtonLists
+        editable={editable}
+        editor={editor}
+        setLink={setLink}
+        insertTable={insertTable}
+      />
+
+      {/* -----Editor----- */}
       <EditorContent
         editor={editor}
         className="prose prose-invert max-w-none"
       />
+
       <style jsx global>{`
         /* Base editor styles for dark theme */
         .ProseMirror {
@@ -70,7 +131,7 @@ export const TiptapEditor: React.FC<TiptapEditorProps> = ({ content }) => {
         .ProseMirror h3,
         .ProseMirror h4 {
           color: #f8fafc;
-          margin-top: 1.5em;
+          margin-top: 1.3em;
           margin-bottom: 0.75em;
           font-weight: 600;
         }
@@ -144,8 +205,10 @@ export const TiptapEditor: React.FC<TiptapEditorProps> = ({ content }) => {
 
         /* Blockquotes */
         .ProseMirror blockquote {
-          border-left-color: #475569;
+          border-left: 4px solid #475569;
+          padding-left: 1rem;
           color: #cbd5e1;
+          margin-left: 0;
         }
 
         /* Task list styling */
